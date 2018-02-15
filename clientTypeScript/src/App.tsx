@@ -16,6 +16,16 @@ interface State {
   restaurants: Array<Restaurant>
 }
 
+interface FetchResponse {
+  json: () => {}
+}
+
+interface ClickEvent {
+  target: {
+    value: string
+  }
+}
+
 export default class App extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props)
@@ -31,8 +41,8 @@ export default class App extends React.Component<Props, State> {
 
   fetchRestaurantsAndSetState() {
     fetch('http://localhost:8080/restaurants')
-      .then(response => response.json())
-      .then(restaurants => this.setState({restaurants}))
+      .then((response: Response) => response.json())
+      .then((restaurants: Array<Restaurant>) => this.setState({restaurants}))
   }
 
   saveButtonWasClicked() {
@@ -50,11 +60,11 @@ export default class App extends React.Component<Props, State> {
     return (
       <div>
         <label>Name</label>
-        <input onChange={e => this.setState({newRestaurant: {name: e.target.value}})}/>
+        <input onChange={(e: ClickEvent) => this.setState({newRestaurant: {name: e.target.value}})}/>
         <button onClick={this.saveButtonWasClicked.bind(this)}>Save</button>
         <ul>
           {
-            this.state.restaurants.map((restaurant, i) => (
+            this.state.restaurants.map((restaurant: Restaurant, i: number) => (
               <li key={i}>
                 <span>{restaurant.id} </span>
                 <span>{restaurant.name} </span>
